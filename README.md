@@ -4,15 +4,15 @@ G-Mesh doesn't stop there; anyone can build their own systems, focusing on trans
 
 In this Github Repository you can see:
 
-https://github.com/georeport-international/g-mesh/g-talk <-- How G-Talk work, logic system, source code & how to build it.
+./g-talk <-- How G-Talk work, logic system, source code & how to build it.
 
-https://github.com/georeport-international/g-mesh/g-node <-- How a G-Node work, logic system, source code & how to build it.
+./g-node <-- How a G-Node work, logic system, source code & how to build it.
 
-https://github.com/georeport-international/g-mesh/g-orbit <-- Our satellite, how it work, logic system, how we built it & source code
+./g-orbit <-- Our satellite, how it work, logic system, how we built it & source code
 
-https://github.com/georeport-international/g-mesh/pqc <-- How our PQC encryption works and how we integrated it with an ESP32
+./pqc <-- How our PQC encryption works and how we integrated it with an ESP32
 
-https://github.com/georeport-international/g-mesh/partners <-- Our partners, funders, contributors and supporters
+./partners <-- Our partners, funders, contributors and supporters
 
 
 **Explore how we're building our systems, who we are, and how we were born.**
