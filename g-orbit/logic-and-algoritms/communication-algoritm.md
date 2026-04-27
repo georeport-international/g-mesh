@@ -58,5 +58,6 @@ communication between nodes, even the nodes can communicate (do you think this i
 Case 6: nd-->pqc-->st-->nd-->wt-->pqc decript <-- always talks to the node if the wt is within range
 node-wt communication, if the node wants to communicate with a wt, it can be reversed, the wt is not connected to any node (parameter connected to the node: True/False + node ID)
 
-## IF YOU SEE ANY ERROR IN THERE, PLEASE, REPORT IT TO US DESK@G-MESH.ORG
+## IF YOU SEE ANY ERROR IN THER, PLEASE, REPORT IT TO US. LAB@G-MESH.ORG
+
 
