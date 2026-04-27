@@ -1,87 +1,86 @@
 ---
-### Licenza e Proprietà Intellettuale
+### License and Intellectual Property
 © 2026 Emanuele Ferraro & GeoReport International.
-Quest'opera (logica di sistema, calcoli e documentazione tecnica di G-Mesh) è distribuita con Licenza [Creative Commons Attribuzione - Condividi allo stesso modo 4.0 Internazionale](http://creativecommons.org/licenses/by-sa/4.0/).
+This work (G-Mesh system logic, calculations, and technical documentation) is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License (http://creativecommons.org/licenses/by-sa/4.0/).
 
-Il codice sorgente associato è invece rilasciato sotto licenza GNU GPL v3.
+The associated source code is released under the GNU General Public License (GPL) v3.
 ---
-messaggio che viene 'tradotto', tutto qui, con delle variabili:
+Message that is 'translated', that's all, with variables:
 
 (0 = false 1 = true)
 
-0x02 (segnala l'inizio del pacchetto)
+0x02 (signals the start of the packet)
 
-1: {ID} (mittente)
+1: {ID} (sender)
 
-2: {ID} (destinatario)
+2: {ID} (recipient)
 
-1_3: True/False (il mittente è un nodo?)
+1_3: True/False (is the sender a node?)
 
-2_3: True/False (il destinatario è un nodo?)
+2_3: True/False (is the recipient a node?)
 
-message = "codice binario del messaggio criptografato"
+message = "binary code of the encrypted message"
 
-0xs = "firma cittografata" (signature)
+0xs = "encrypted signature"
 
-1xs = "hash della chiave pubblica" 
+1xs = "public key hash"
 
 0xx = 12345678
 
-x = "testo casuale"
+x = "random text"
 
 sos = True/False
 
-0x03 (segnala la chiusura del pacchetto)
+0x03 (signals the end of the packet)
 
+We'll use enums for SOS/fast messages to save bytes. Here's the List:
 
-utilizzeremo degli enum (enumerazioni) per dei messaggi di sos/messaggi veloci per risparmiare byte, ecco la lista:
+xxr0 = Network/Connection Test
 
-xxr0 = test di rete/connessione
+xxr = Heartbeat
 
-xxr = heartbeat
+xxr1 = How are you?
 
-xxr1 = Come stai?
+xxr2 = General SOS
 
-xxr2 = SOS generico
+xxr3 = I need medical attention
 
-xxr3 = Ho bisogno di un medico
+xxr4 = Serious Injury
 
-xxr4 = infortunio grave
+xxr5 = Out of Supplies (Water/Food) or Technical Failure
 
-xxr5 = Esaurimento scorte (acqua/cibo) o guasto tecnico
+xxr6 = All OK
 
-xxr6 = Tutto bene
+xxr7 = I Found the Person or Object I'm Looking for
 
-xxr7 = Ho trovato la persona o l'oggetto cercato
+xxr8 = Confirmation of Receipt
 
-xxr8 = Conferma di ricezione
+xxr9 = Can Anyone Hear the Satellite?
 
-xxr9 = Qualcuno sente il satellite?
-
-xxr10 = Qualcuno sente il nodo?
+xxr10 = Can Anyone Hear the Node?
 
 xxr11 = Low Battery Warning
 
-xxr12 = Il meteo sta peggiorando
+xxr12 = The weather is getting worse
 
-xxr13 = Mi fermo/Torno indietro
+xxr13 = I'm stopping/going back
 
 xxr14 = OK
 
-xxr15 = SI
+xxr15 = YES
 
 xxr16 = NO
 
-xxr17 = Non lo so
+xxr17 = I don't know
 
-xxr18 = c'è un problema
+xxr18 = There's a problem
 
-xxr19 = Sentiero bloccato / frana
+xxr19 = Path blocked/landslide
 
-xxr20 = Messaggio ricevuto
+xxr20 = Message received
 
-xxr21 = Mi sono perso
+xxr21 = I'm lost
 
-xxr22 = Qui non c'è campo
+xxr22 = There's no signal here
 
-Quest'ultimi saranno disponibili nell'interfaccia del G-TALK
+These will be available in the G-TALK interface
