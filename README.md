@@ -4,7 +4,7 @@ G-Mesh doesn't stop there; anyone can build their own systems, focusing on trans
 
 **Explore how we're building our systems, who we are, and how we were born.**
 
-https://youtube.com/@g-mesh
+https://youtube.com/@georeport-international-tech
 
 https://g-mesh.org/
 
