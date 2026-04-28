@@ -1,8 +1,9 @@
-# ![GeoReport Logo](https://avatars.githubusercontent.com/u/279549648?s=200&v=4) G-Mesh, a New Way for Free Speech
+# G-Mesh, a New Way for Free Speech
 G-Mesh was born from several contemporary problems: in recent months, the GeoReport team has realized something: centralized systems are taking away people's freedom—think of Ukraine, Russia, and Iran, where a billionaire or a simple governor can silence anyone in a matter of seconds. Well, we don't agree with that; G-Mesh was created precisely to solve this problem, guaranteeing everyone secure (with post-quantum encryption), free, decentralized, and anonymous communication.
 G-Mesh doesn't stop there; anyone can build their own systems, focusing on transparency, trust, and privacy. G-Mesh can be used in emergencies, when 5G towers are destroyed or fiber optic cables are severed. G-Mesh is essential for hikers, when they need to communicate in areas without internet, in critical zones, or in situations such as floods, uninhabited areas, wars, and limited freedom of the press.
 
 ---
+![GeoReport Logo](https://avatars.githubusercontent.com/u/279549648?s=200&v=4) 
 ![License](https://img.shields.io/github/license/georeport-international/g-mesh) ![Top Language](https://img.shields.io/github/languages/top/georeport-international/g-mesh) ![Repo Size](https://img.shields.io/github/repo-size/georeport-international/g-mesh)
 ![PQC Crypto](https://img.shields.io/badge/Security-PQC_Encrypted-blueviolet) ![Contributors](https://img.shields.io/github/contributors/georeport-international/g-mesh) ![Top Languages](https://img.shields.io/github/languages/top/georeport-international/g-mesh)
 
