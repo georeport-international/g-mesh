@@ -3,7 +3,7 @@ G-Mesh was born from several contemporary problems: in recent months, the GeoRep
 G-Mesh doesn't stop there; anyone can build their own systems, focusing on transparency, trust, and privacy. G-Mesh can be used in emergencies, when 5G towers are destroyed or fiber optic cables are severed. G-Mesh is essential for hikers, when they need to communicate in areas without internet, in critical zones, or in situations such as floods, uninhabited areas, wars, and limited freedom of the press.
 
 ---
-![License](https://img.shields.io/github/license/TUO_USERNAME/NOME_REPO) ![Top Language](https://img.shields.io/github/languages/top/georeport-international/g-mesh) ![Repo Size](https://img.shields.io/github/repo-size/georeport-international/g-mesh)
+![License](https://img.shields.io/github/license/georeport-international/g-mesh) ![Top Language](https://img.shields.io/github/languages/top/georeport-international/g-mesh) ![Repo Size](https://img.shields.io/github/repo-size/georeport-international/g-mesh)
 ![PQC Crypto](https://img.shields.io/badge/Security-PQC_Encrypted-blueviolet) ![Contributors](https://img.shields.io/github/contributors/georeport-international/g-mesh) ![Top Languages](https://img.shields.io/github/languages/top/georeport-international/g-mesh)
 
 ## 🛠 Project Ecosystem
