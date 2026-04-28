@@ -12,4 +12,3 @@ G-TALK says: "I am ID #777, I am locked to G-NODE #001, and I see the G-EYE #01 
 
 This information is stored in a Routing Table synchronized between all nodes and the satellite. When you want to talk to ID #888, your G-TALK asks the network, "Where is 888?" The network responds, "It's on G-NODE #005." The packet goes straight there.
 
-## IF YOU SEE ANY ERROR IN THER, PLEASE, REPORT IT TO US. LAB@G-MESH.ORG
