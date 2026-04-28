@@ -27,6 +27,7 @@ Explore the components of the G-Mesh network:
 * **Technical Lab:** [lab.georeport.it](https://lab.georeport.it/)
 * **Dev Blog:** [blog.g-mesh.org](https://blog.g-mesh.org/)
 * **YouTube:** [@georeport-international-tech](https://youtube.com/@georeport-international-tech)
+* **Email:** Redazione@georeport.it
 
 ---
 *Developed by GeoReport International Technologies*
