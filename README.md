@@ -35,3 +35,11 @@ Explore the components of the G-Mesh network:
 
 ---
 *Developed by GeoReport International Technologies*
+
+## If you want to support our mission, don't donate to us, but donate to them.
+(Click the image to go to the donation page)
+![Free Software Foundation](https://static.fsf.org/common/img/logo-new.png)(https://www.fsf.org/donate/)
+![Medecins Sans Frontieres](https://www.medicisenzafrontiere.it/wp-content/themes/msf/public/images/msf-logo-full.svg)(https://www.msf.org/donate)
+![Eletronic Privacy Information Center](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fepic.org%2Fwp-content%2Fuploads%2Fbis-images%2F26871%2FEPIC-2021-logo-social-1200x630-f50_50.png&f=1&nofb=1&ipt=6f2870e3d194549913a5fb6089bd5ca1c1421c0efd9c4c9a0881ba5119377f2f)(https://epic.org/donate-to-epic/)
+![Croce Rossa Italiana](https://cri.it/wp-content/uploads/2019/10/cropped-Marchio-ROSSO-ORIZZONTALE-RGB-3.png)(https://dona.cri.it/crisi-medioriente)
+
