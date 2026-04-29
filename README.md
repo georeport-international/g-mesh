@@ -43,7 +43,7 @@ Explore the components of the G-Mesh network:
 
 [![Medecins Sans Frontieres](https://www.medicisenzafrontiere.it/wp-content/themes/msf/public/images/msf-logo-full.svg)](https://www.msf.org/donate)
 
-[![Eletronic Privacy Information Center]([https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fepic.org%2Fwp-content%2Fuploads%2Fbis-images%2F26871%2FEPIC-2021-logo-social-1200x630-f50_50.png&f=1&nofb=1&ipt=6f2870e3d194549913a5fb6089bd5ca1c1421c0efd9c4c9a0881ba5119377f2f)](https://epic.org/donate-to-epic/](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%2Fid%2FOIP.SyTbgHAXE8DXLKXZr1O8AQHaBK%3Fpid%3DApi&f=1&ipt=56222ee681fb2d0b33cd9cbd7c34c46ba942d43fbb07fbe9a7a90e714a713629&ipo=images))
+[![Eletronic Privacy Information Center](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%2Fid%2FOIP.EddQFauZ0o0OdZXIuPW8twHaEK%3Fpid%3DApi&f=1&ipt=ab5c4152b8c3fcde63a87862bc5fdfd536faef5d56e001c2ba623e219cf41e31&ipo=images)](https://epic.org/donate-to-epic/)
 
 [![Croce Rossa Italiana](https://cri.it/wp-content/uploads/2019/10/cropped-Marchio-ROSSO-ORIZZONTALE-RGB-3.png)](https://dona.cri.it/crisi-medioriente)
 
