@@ -341,27 +341,45 @@ void checkIncomingLora() {
 }
 
 void setupUI() {
-    // Crea una rete Wi-Fi chiamata "G-TALK-[TuoID]"
     char apName[20];
     sprintf(apName, "G-TALK-%08X", myID);
     WiFi.softAP(apName, "12345678");
 
-    // Pagina principale
+    // 1. Pagina principale con processore di template per l'ID
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-        request->send_P(200, "text/html", index_html);
+        request->send_P(200, "text/html", index_html, [](const String& var){
+            if(var == "MYID") {
+                char idStr[10];
+                sprintf(idStr, "%08X", myID);
+                return String(idStr);
+            }
+            return String();
+        });
     });
 
-    // Gestione dell'invio dal browser
-    server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send_P(200, "text/html", index_html, [](const String& var){
-        if(var == "MYID") {
-            char idStr[10];
-            sprintf(idStr, "%08X", myID);
-            return String(idStr);
+    // 2. Gestione dell'invio (RIPRISTINATA)
+    server.on("/send", HTTP_GET, [](AsyncWebServerRequest *request){
+        if (request->hasParam("type") && request->hasParam("target")) {
+            String type = request->getParam("type")->value();
+            uint32_t targetID = strtoul(request->getParam("target")->value().c_str(), NULL, 16);
+            String msg = request->hasParam("msg") ? request->getParam("msg")->value() : "";
+
+            if(type == "SOS") {
+                GPacket p = preparePacket(MSG_SOS_MEDIC, targetID, nullptr, 0);
+                sendToRadio(p);
+            } else if(type == "CHAT") {
+                GPacket p = preparePacket(MSG_CHAT, targetID, (uint8_t*)msg.c_str(), msg.length());
+                sendToRadio(p);
+            }
+            request->send(200, "text/plain", "Inviato");
+        } else {
+            request->send(400, "text/plain", "Parametri mancanti");
         }
-        return String();
     });
-});
+
+    server.begin();
+    Serial.println("Interfaccia UI avviata correttamente");
+}
 
 const char index_html[] PROGMEM = R"rawliteral(
 <!DOCTYPE HTML><html><head>
