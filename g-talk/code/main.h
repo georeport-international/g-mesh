@@ -3,6 +3,39 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, version 3.
  */
+/* 
+ * This file will receive periodical update frome the GeoReport International Technologies Team
+ * Todo: 
+[ ] Library Selection: Download and import an ESP32-optimized version of Kyber into your project (for example, a port of the PQClean or PQC-m4 library).
+
+[ ] Parameter Configuration: Define whether to use Kyber-512 (security level similar to AES-128) or Kyber-768 (similar to AES-192).
+
+Handshake Implementation (Key Exchange)
+[ ] Key Pair Generation: Implement the function that generates the pk (public key) and sk (secret key) at startup or session request.
+
+[ ] Transmission Logic: Complete handleKyberExchange to manage sending the public key via the MSG_KYBER_PUBKEY packet.
+
+[ ] Encap/Decap: * The recipient receives the pk and runs crypto_kem_encap to generate the ciphertext and shared_secret.
+
+The sender receives the ciphertext and executes crypto_kem_decap to obtain the same shared_secret.
+
+Security and Encryption
+[ ] Shared Secret Management: Save the derived key in the existing shared_secret[32] array.
+
+[ ] Session Activation: Set is_secure_session = true only after a successful handshake.
+
+[ ] AES Padding: Refine the padding logic in processFinalMessage to ensure the data is always a multiple of 16 bytes (required by AES-CBC).
+
+Communication and Mesh
+[ ] Fragmentation Management: Since a Kyber-512 public key takes up about 800 bytes, you must correctly implement multi-packet sending (using frameIdx and totalFrames) since your LoRa buffer is limited to 200 bytes per packet.
+
+[ ] ACK for Handshake: Ensure that the key exchange is confirmed, otherwise the encrypted message cannot be decrypted.
+
+Interface and Monitoring
+[ ] OLED Feedback: Update the interface to show when the key has been successfully exchanged (e.g., "Sec: ACTIVE").
+
+[ ] Battery Alert: Test whether sending MSG_BATT_LOW interferes with active secure sessions.
+ * Check Out our blog at youtube.com/@georeport-international-tech  */
 #include <Arduino.h>
 #include <esp_mac.h>      // Per il MAC address
 #include "mbedtls/aes.h"  // Per la crittografia hardware
