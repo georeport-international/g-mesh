@@ -1,6 +1,6 @@
 ---
 ### License and Intellectual Property
-© 2026 Emanuele Ferraro & GeoReport International.
+© 2026 Emanuele Ferraro & GeoReport International Technologies.
 This work (G-Mesh system logic, calculations, and technical documentation) is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License (http://creativecommons.org/licenses/by-sa/4.0/).
 
 The associated source code is released under the GNU GPL v3 license.
