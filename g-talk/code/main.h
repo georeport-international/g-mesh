@@ -18,6 +18,7 @@
 #define OLED_RST 21
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
+#define DEFAULT_TTL 3
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RST);
 
@@ -161,18 +162,19 @@ uint32_t generateDeviceID() {
     return (mac[2] << 24) | (mac[3] << 16) | (mac[4] << 8) | mac[5];
 }
 
-GPacket preparePacket(GMessageType type, uint32_t target, uint8_t* data, uint16_t len) {
+GPacket preparePacket(GMessageType type, uint32_t target, uint8_t* data, uint16_t len, uint8_t ttlValue = DEFAULT_TTL) {
     GPacket p;
     p.senderID = myID;
     p.targetID = target;
     p.sessionID = ++currentSessionID;
     p.msgType = (uint8_t)type;
-    p.ttl = initialttl;
+    p.ttl = ttlValue; 
     p.frameIdx = 0;
     p.totalFrames = 1;
     p.timestamp = millis() / 1000;
     p.nonce = currentNonce++;
     p.payloadLen = (len > 200) ? 200 : len;
+    memset(p.payload, 0, 200); // Pulisce il payload prima dell'uso
     if (data != nullptr) memcpy(p.payload, data, p.payloadLen);
     return p;
 }
@@ -237,23 +239,16 @@ void processFinalMessage(uint8_t type, uint8_t* data, uint16_t len, uint32_t non
 
 void handlePacketReassembly(GPacket &p) {
     int slot = -1;
-    // Cerca slot esistente
+
+    // Cerca se esiste già una sessione attiva per questo mittente
     for (int i = 0; i < 5; i++) {
         if (rxBuffer[i].senderID == p.senderID && rxBuffer[i].sessionID == p.sessionID) {
-            slot = i; break;
+            slot = i;
+            break;
         }
     }
-    // Se nuovo, cerca slot vuoto
-    if (rxBuffer[i].receivedFrames == 0) {
-                slot = i;
-                rxBuffer[i].senderID = p.senderID;
-                rxBuffer[i].targetID = p.targetID;
-                rxBuffer[i].sessionID = p.sessionID;
-                rxBuffer[i].totalFrames = p.totalFrames;
-                rxBuffer[i].totalPayloadLen = 0; // Inizializza a 0
-                break;
-            }
 
+    // Se non esiste, cerca il primo slot libero (receivedFrames == 0)
     if (slot == -1) {
         for (int i = 0; i < 5; i++) {
             if (rxBuffer[i].receivedFrames == 0) {
@@ -262,32 +257,37 @@ void handlePacketReassembly(GPacket &p) {
                 rxBuffer[i].targetID = p.targetID;
                 rxBuffer[i].sessionID = p.sessionID;
                 rxBuffer[i].totalFrames = p.totalFrames;
-                rxBuffer[i].actualPayloadLen = 0; // Reset lunghezza reale
+                rxBuffer[i].actualPayloadLen = 0; 
                 break;
             }
         }
     }
 
+    // Se abbiamo trovato un posto (nuovo o esistente)
     if (slot != -1) {
         uint16_t offset = p.frameIdx * 200;
-        memcpy(&rxBuffer[slot].fullData[offset], p.payload, p.payloadLen);
-        
-        rxBuffer[slot].receivedFrames++;
-        rxBuffer[slot].actualPayloadLen += p.payloadLen; // Incremento preciso
-        rxBuffer[slot].lastUpdate = millis();
+        if (offset + p.payloadLen <= 1000) { // Protezione buffer overflow
+            memcpy(&rxBuffer[slot].fullData[offset], p.payload, p.payloadLen);
+            rxBuffer[slot].receivedFrames++;
+            rxBuffer[slot].actualPayloadLen += p.payloadLen;
+            rxBuffer[slot].lastUpdate = millis();
+        }
 
         if (rxBuffer[slot].receivedFrames == rxBuffer[slot].totalFrames) {
-            // Passiamo actualPayloadLen invece di un valore fisso!
-            processFinalMessage(p.msgType, rxBuffer[slot].fullData, rxBuffer[slot].actualPayloadLen, p.nonce);
+            // Calcolo lunghezza per AES (deve essere multiplo di 16)
+            uint16_t cryptLen = rxBuffer[slot].actualPayloadLen;
+            if (is_secure_session && (cryptLen % 16 != 0)) {
+                cryptLen = ((cryptLen / 16) + 1) * 16;
+            }
+
+            processFinalMessage(p.msgType, rxBuffer[slot].fullData, cryptLen, p.nonce);
             
-            // ACK solo per messaggi diretti (non per Heartbeat o Broadcast)
             if (p.targetID == myID && p.msgType != MSG_ACK && p.msgType != MSG_NACK) {
                 sendAckNack(p.senderID, p.sessionID, true);
             }
             memset(&rxBuffer[slot], 0, sizeof(IncomingMessage));
         }
     }
-
 }
 
 // Funzione di pulizia RAM in caso di pacchetti bloccati/persi
@@ -352,26 +352,16 @@ void setupUI() {
     });
 
     // Gestione dell'invio dal browser
-    server.on("/send", HTTP_GET, [](AsyncWebServerRequest *request){
-        String type = request->getParam("type")->value();
-        String targetStr = request->getParam("target")->value();
-        String msg = request->getParam("msg")->value();
-
-        uint32_t targetID = strtoul(targetStr.c_str(), NULL, 16);
-        
-        if(type == "SOS") {
-            GPacket p = preparePacket(MSG_SOS_MEDIC, targetID, nullptr, 0);
-            sendToRadio(p);
-        } else if(type == "CHAT") {
-            GPacket p = preparePacket(MSG_CHAT, targetID, (uint8_t*)msg.c_str(), msg.length());
-            sendToRadio(p);
+    server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send_P(200, "text/html", index_html, [](const String& var){
+        if(var == "MYID") {
+            char idStr[10];
+            sprintf(idStr, "%08X", myID);
+            return String(idStr);
         }
-        request->send(200, "text/plain", "OK");
+        return String();
     });
-
-    server.begin();
-    Serial.println("Interfaccia UI avviata");
-}
+});
 
 const char index_html[] PROGMEM = R"rawliteral(
 <!DOCTYPE HTML><html><head>
