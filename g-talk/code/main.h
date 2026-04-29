@@ -66,6 +66,12 @@ enum GMessageType : uint8_t {
     MSG_DONT_KNOW         = 0x11, // xxr17: Non lo so
     MSG_RECEIVED          = 0x14  // xxr20: Messaggio ricevuto
 
+    // --- TECNICI ---
+    MSG_RECEIVED          = 0x14,
+    MSG_CHAT              = 0x1C, // Aggiunto: necessario per la compilazione
+    MSG_KYBER_PUBKEY      = 0x20, 
+    MSG_KYBER_CIPHERTEXT  = 0x21
+
 };
 
 struct __attribute__((packed)) GPacket {
@@ -91,7 +97,7 @@ struct IncomingMessage {
     uint16_t sessionID;
     uint8_t  receivedFrames;
     uint8_t  totalFrames;
-    uint16_t totalPayloadLen;
+    uint16_t actualPayloadLen;
     uint8_t  fullData[1000]; // Buffer per messaggi lunghi
     uint32_t lastUpdate;     
 };
@@ -161,7 +167,7 @@ GPacket preparePacket(GMessageType type, uint32_t target, uint8_t* data, uint16_
     p.targetID = target;
     p.sessionID = ++currentSessionID;
     p.msgType = (uint8_t)type;
-    p.ttl = ttl;
+    p.ttl = initialttl;
     p.frameIdx = 0;
     p.totalFrames = 1;
     p.timestamp = millis() / 1000;
@@ -248,25 +254,40 @@ void handlePacketReassembly(GPacket &p) {
                 break;
             }
 
+    if (slot == -1) {
+        for (int i = 0; i < 5; i++) {
+            if (rxBuffer[i].receivedFrames == 0) {
+                slot = i;
+                rxBuffer[i].senderID = p.senderID;
+                rxBuffer[i].targetID = p.targetID;
+                rxBuffer[i].sessionID = p.sessionID;
+                rxBuffer[i].totalFrames = p.totalFrames;
+                rxBuffer[i].actualPayloadLen = 0; // Reset lunghezza reale
+                break;
+            }
+        }
+    }
+
     if (slot != -1) {
         uint16_t offset = p.frameIdx * 200;
         memcpy(&rxBuffer[slot].fullData[offset], p.payload, p.payloadLen);
+        
         rxBuffer[slot].receivedFrames++;
-        rxBuffer[slot].totalPayloadLen += p.payloadLen; // Accumula solo i byte reali
+        rxBuffer[slot].actualPayloadLen += p.payloadLen; // Incremento preciso
         rxBuffer[slot].lastUpdate = millis();
 
         if (rxBuffer[slot].receivedFrames == rxBuffer[slot].totalFrames) {
-            // Usa totalPayloadLen invece di totalFrames * 200
-            processFinalMessage(p.msgType, rxBuffer[slot].fullData, rxBuffer[slot].totalPayloadLen, p.nonce);
+            // Passiamo actualPayloadLen invece di un valore fisso!
+            processFinalMessage(p.msgType, rxBuffer[slot].fullData, rxBuffer[slot].actualPayloadLen, p.nonce);
             
-            // Invia ACK se il pacchetto era diretto a noi (non broadcast) e se NON è un ACK/NACK (evita loop infiniti)
-            if (rxBuffer[slot].targetID != 0xFFFFFFFF && p.msgType != MSG_ACK && p.msgType != MSG_NACK) {
-                sendAckNack(rxBuffer[slot].senderID, rxBuffer[slot].sessionID, true);
+            // ACK solo per messaggi diretti (non per Heartbeat o Broadcast)
+            if (p.targetID == myID && p.msgType != MSG_ACK && p.msgType != MSG_NACK) {
+                sendAckNack(p.senderID, p.sessionID, true);
             }
-
-            memset(&rxBuffer[slot], 0, sizeof(IncomingMessage)); // Svuota slot
+            memset(&rxBuffer[slot], 0, sizeof(IncomingMessage));
         }
     }
+
 }
 
 // Funzione di pulizia RAM in caso di pacchetti bloccati/persi
@@ -290,30 +311,31 @@ void checkRxBufferTimeout() {
 
 void checkIncomingLora() {
     int state = radio.receive((uint8_t*)&tempPacket, sizeof(GPacket));
+    
     if (state == RADIOLIB_ERR_NONE) {
-        // Filtro integrità base
         if (tempPacket.stx != 0x02 || tempPacket.etx != 0x03) return;
 
         float rssi = radio.getRSSI();
         float snr = radio.getSNR();
-        
-        // Logica MESH e TTL: Se non è per noi, lo rilanciamo abbassando il TTL
-        if (tempPacket.targetID != myID) {
+
+        // --- LOGICA TTL SOLO PER HEARTBEAT ---
+        if (tempPacket.msgType == MSG_HEARTBEAT && tempPacket.targetID == 0xFFFFFFFF) {
             if (!isMsgSeen(tempPacket.senderID, tempPacket.sessionID)) {
                 if (tempPacket.ttl > 0) {
                     tempPacket.ttl--;
-                    delay(random(10, 100)); // CSMA/CA base per evitare collisioni
-                    radio.transmit((uint8_t*)&tempPacket, sizeof(GPacket));
-                    updateUI("Mesh Routing", "Inoltro Pkt", rssi, snr);
+                    radio.transmit((uint8_t*)&tempPacket, sizeof(GPacket)); // Rilancio mesh
+                    updateUI("MESH HB", "Relay Heartbeat", rssi, snr);
                 }
             }
-            if (tempPacket.targetID != 0xFFFFFFFF) return; // Se era broadcast continuiamo
         }
-        
-        // Se è per noi (o broadcast)
-        if (!isMsgSeen(tempPacket.senderID, tempPacket.sessionID)) {
-            updateUI("RX Ricezione", "Ricevuto pacchetto", rssi, snr);
-            handlePacketReassembly(tempPacket);
+
+        // --- LOGICA MESSAGGI DIRETTI (NO MESH) ---
+        // Accettiamo il pacchetto solo se è per noi o è un broadcast
+        if (tempPacket.targetID == myID || tempPacket.targetID == 0xFFFFFFFF) {
+            if (!isMsgSeen(tempPacket.senderID, tempPacket.sessionID)) {
+                updateUI("RX DATA", "Ricezione in corso", rssi, snr);
+                handlePacketReassembly(tempPacket);
+            }
         }
     }
 }
