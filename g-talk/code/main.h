@@ -68,7 +68,6 @@ enum GMessageType : uint8_t {
     MSG_RECEIVED          = 0x14  // xxr20: Messaggio ricevuto
 
     // --- TECNICI ---
-    MSG_RECEIVED          = 0x14,
     MSG_CHAT              = 0x1C, // Aggiunto: necessario per la compilazione
     MSG_KYBER_PUBKEY      = 0x20, 
     MSG_KYBER_CIPHERTEXT  = 0x21
