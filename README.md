@@ -41,7 +41,7 @@ Explore the components of the G-Mesh network:
 
 
 <a href="https://www.fsf.org/donate/">
-  <img src="https://static.fsf.org/common/img/logo-new.png" alt="Free Software Foundation" style="height: 100px; width: auto;">
+  <img src="https://static.fsf.org/common/img/logo-new.png" alt="Free Software Foundation" style="height: 60px; width: auto;">
 </a>
 
 
