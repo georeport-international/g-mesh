@@ -15,7 +15,7 @@ Explore the components of the G-Mesh network:
 * [**G-Node**](./g-node): Network nodes, source code, and infrastructure.
 * [**G-Orbit**](./g-orbit): Our satellite segment — logic, builds, and orbital data.
 * [**PQC**](./pqc): Integration of Post-Quantum encryption on ESP32.
-* [**Partners**](./partners): Contributors, supporters, and funders.
+* [**Partners**](./partners.md): Contributors, supporters, and funders.
 
 ## 📡 Use Cases
 * **Conflict Zones:** Communication when infrastructure is destroyed or censored.
