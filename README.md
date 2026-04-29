@@ -39,12 +39,12 @@ Explore the components of the G-Mesh network:
 ## If you want to support our mission, don't donate to us, but donate to them.
 (Click the image to go to the donation page)
 
-[![Free Software Foundation](https://static.fsf.org/common/img/logo-new.png){: width="200px"}]](https://www.fsf.org/donate/)
+[![Free Software Foundation](https://static.fsf.org/common/img/logo-new.png){: width="200px"}](https://www.fsf.org/donate/)
 
-[![Medecins Sans Frontieres](https://www.medicisenzafrontiere.it/wp-content/themes/msf/public/images/msf-logo-full.svg){: width="200px"}]](https://www.msf.org/donate)
+[![Medecins Sans Frontieres](https://www.medicisenzafrontiere.it/wp-content/themes/msf/public/images/msf-logo-full.svg){: width="200px"}](https://www.msf.org/donate)
 
-[![Eletronic Privacy Information Center](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%2Fid%2FOIP.EddQFauZ0o0OdZXIuPW8twHaEK%3Fpid%3DApi&f=1&ipt=ab5c4152b8c3fcde63a87862bc5fdfd536faef5d56e001c2ba623e219cf41e31&ipo=images){: width="200px"}]](https://epic.org/donate-to-epic/)
+[![Eletronic Privacy Information Center](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%2Fid%2FOIP.EddQFauZ0o0OdZXIuPW8twHaEK%3Fpid%3DApi&f=1&ipt=ab5c4152b8c3fcde63a87862bc5fdfd536faef5d56e001c2ba623e219cf41e31&ipo=images){: width="200px"}](https://epic.org/donate-to-epic/)
 
-[![Croce Rossa Italiana](https://cri.it/wp-content/uploads/2019/10/cropped-Marchio-ROSSO-ORIZZONTALE-RGB-3.png){: width="200px"}]](https://dona.cri.it/crisi-medioriente)
+[![Croce Rossa Italiana](https://cri.it/wp-content/uploads/2019/10/cropped-Marchio-ROSSO-ORIZZONTALE-RGB-3.png){: width="200px"}](https://dona.cri.it/crisi-medioriente)
 
 
