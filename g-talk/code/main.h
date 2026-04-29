@@ -102,6 +102,12 @@ struct IncomingMessage {
     uint32_t lastUpdate;     
 };
 
+// CONTROLLO VOLTAGGIO BATTERIA
+float getBatteryVoltage() {
+  uint32_t raw = analogRead(1); // Pin 1 sulla V3
+  float voltage = (raw / 4095.0) * 2 * 3.3 * 1.1; // Calibrazione tipica Heltec
+  return voltage;
+}
 // 2. VARIABILI GLOBALI E HARDWARE
 
 SX1262 radio = new Module(8, 14, 12, 13);
@@ -449,5 +455,9 @@ void loop() {
         GPacket p = preparePacket(MSG_HEARTBEAT, 0xFFFFFFFF, nullptr, 0);
         sendToRadio(p);
         lastMsg = millis();
+    }
+    if (getBatteryVoltage() < 3.4) {
+    GPacket p = preparePacket(MSG_BATT_LOW, 0xFFFFFFFF, nullptr, 0);
+    sendToRadio(p);
     }
 }
