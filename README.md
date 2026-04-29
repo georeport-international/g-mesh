@@ -39,12 +39,20 @@ Explore the components of the G-Mesh network:
 ## If you want to support our mission, don't donate to us, but donate to them.
 (Click the image to go to the donation page)
 
-[![Free Software Foundation](https://static.fsf.org/common/img/logo-new.png){: width="200px"}](https://www.fsf.org/donate/)
+<a href="https://www.fsf.org/donate/">
+  <img src="https://static.fsf.org/common/img/logo-new.png" alt="Free Software Foundation" style="height: 100px; width: auto;">
+</a>
 
-[![Medecins Sans Frontieres](https://www.medicisenzafrontiere.it/wp-content/themes/msf/public/images/msf-logo-full.svg){: width="200px"}](https://www.msf.org/donate)
+<a href="https://www.msf.org/donate">
+  <img src="https://www.medicisenzafrontiere.it/wp-content/themes/msf/public/images/msf-logo-full.svg" alt="Medecins Sans Frontieres" style="height: 100px; width: auto;">
+</a>
 
-[![Eletronic Privacy Information Center](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%2Fid%2FOIP.EddQFauZ0o0OdZXIuPW8twHaEK%3Fpid%3DApi&f=1&ipt=ab5c4152b8c3fcde63a87862bc5fdfd536faef5d56e001c2ba623e219cf41e31&ipo=images){: width="200px"}](https://epic.org/donate-to-epic/)
+<a href="https://epic.org/donate-to-epic/">
+  <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%2Fid%2FOIP.EddQFauZ0o0OdZXIuPW8twHaEK%3Fpid%3DApi&f=1&ipt=ab5c4152b8c3fcde63a87862bc5fdfd536faef5d56e001c2ba623e219cf41e31&ipo=images" alt="Electronic Privacy Information Center" style="height: 100px; width: auto;">
+</a>
 
-[![Croce Rossa Italiana](https://cri.it/wp-content/uploads/2019/10/cropped-Marchio-ROSSO-ORIZZONTALE-RGB-3.png){: width="200px"}](https://dona.cri.it/crisi-medioriente)
+<a href="https://dona.cri.it/crisi-medioriente">
+  <img src="https://cri.it/wp-content/uploads/2019/10/cropped-Marchio-ROSSO-ORIZZONTALE-RGB-3.png" alt="Croce Rossa Italiana" style="height: 100px; width: auto;">
+</a>
 
 
