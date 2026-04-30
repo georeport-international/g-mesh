@@ -14,6 +14,8 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+#include "pqc_kyber.h"
+#include "mbedtls/gcm.h"
 
 #define OLED_SDA 17
 #define OLED_SCL 18
@@ -93,6 +95,27 @@ struct __attribute__((packed)) GPacket {
     uint8_t  etx = 0x03;
 };
 
+// Nuova struttura ottimizzata per il KEM Handshake
+struct __attribute__((packed)) GKeyPacket {
+    uint8_t  stx = 0x02;
+    uint32_t senderID;
+    uint32_t targetID;
+    uint8_t  msgType;     // MSG_KYBER_PUBKEY o MSG_KYBER_CIPHERTEXT
+    uint8_t  frameIdx;    // 0, 1, 2, 3...
+    uint8_t  totalFrames; // Es. 4 per PK (800 bytes / 200)
+    uint8_t  payloadLen;  // Fino a 200
+    uint8_t  payload[200];
+    uint8_t  etx = 0x03;
+};
+
+//struttura di un pacchetto cifrato
+struct __attribute__((packed)) GSecureMsg {
+    uint8_t  iv[12];      // Nonce generato casualmente ad ogni invio
+    uint8_t  tag[16];     // Tag di autenticazione GCM
+    uint16_t cipherLen;
+    uint8_t  ciphertext[200]; 
+};
+
 struct IncomingMessage {
     uint32_t senderID;
     uint32_t targetID;       // Necessario per sapere se era un broadcast
@@ -159,7 +182,28 @@ bool isMsgSeen(uint32_t sender, uint16_t session) {
 }
 
 void handleKyberExchange(uint8_t type, uint8_t* data) {
-    // Qui andranno kyber512_encap e kyber512_decap per popolare shared_secret
+    if (type == MSG_KYBER_PUBKEY) {
+        // ricevimento della chiave pubblica
+        uint8_t ciphertext[KYBER_CIPHERTEXTBYTES];
+        
+        // incapsulamento della chiave
+        pqc_kyber512_encapsulate(ciphertext, shared_secret, data);
+        
+        // invio della chiave
+        GPacket p = preparePacket(MSG_KYBER_CIPHERTEXT, tempPacket.senderID, ciphertext, KYBER_CIPHERTEXTBYTES);
+        sendToRadio(p);
+        
+        is_secure_session = true;
+        updateUI("SECURE", "Key Encapsulated");
+    } 
+    else if (type == MSG_KYBER_CIPHERTEXT) {
+        // ricevimento
+        pqc_kyber512_decapsulate(shared_secret, data, privateKey);
+        
+        is_secure_session = true;
+        updateUI("SECURE", "Key Decapsulated");
+    }
+
     updateUI("Kyber KEM", "Scambio chiavi PQC");
 }
 
