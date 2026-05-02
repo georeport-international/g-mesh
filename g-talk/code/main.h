@@ -1,6 +1,7 @@
 /* * G-Mesh Project - (C) 2026 Emanuele Ferraro & GeoReport International Technologies
  * Versione: ML-KEM (Kyber-512) + AES-256-GCM + Full Utilities
  */
+// Last update: battery optimization
 
 #include <Arduino.h>
 #include <esp_mac.h>      // Per il MAC address
@@ -28,6 +29,10 @@
 #define KYBER_PK_SIZE 800
 #define KYBER_SK_SIZE 1632
 #define KYBER_CT_SIZE 768
+
+// --- WAKE UP BUTTONS & LORA ---
+#define BUTTON_PIN GPIO_NUM_0      // BOOT button
+#define RADIO_DIO1_PIN GPIO_NUM_14 // LoRa module
 
 // --- STRUTTURE DATI ---
 enum GMessageType : uint8_t {
@@ -496,27 +501,81 @@ void setupUI() {
     Serial.println("Interfaccia UI avviata correttamente");
 }
 
+// --- SLEEP MODE ---
+void SleepMode() {
+    updateUI("SLEEPING", "SleepMode avviata");
+    display.ssd1306_command(SSD1306_DISPLAYOFF);
+    radio.startReceive();
+    server.end();
+    WiFi.disconnect(true);
+    WiFi.mode(WIFI_OFF);
+    esp_sleep_enable_ext0_wakeup(BUTTON_PIN, 0);
+    esp_sleep_enable_ext1_wakeup((1ULL << RADIO_DIO1_PIN), ESP_EXT1_WAKEUP_ANY_HIGH); // if the lora module receive something the esp32 will wake up
+    esp_sleep_enable_time_wakeup(60 * 1000000); //security timer
+    
+    esp_deep_sleep_start();
+    
+}
+
+void WakeUpReason() { // explain why the esp32 waked up
+  esp_sleep_wakeup_cause_t wakeup_reason = esp_sleep_get_wakeup_cause();
+
+  switch(wakeup_reason) {
+    case ESP_SLEEP_WAKEUP_EXT0: 
+      Serial.println("Waked Up from the button"); 
+      break;
+    case ESP_SLEEP_WAKEUP_EXT1: 
+      Serial.println("Waked Up from LoRa module"); 
+      // radio initialize and buffer reading
+      break;
+    case ESP_SLEEP_WAKEUP_TIMER: 
+      Serial.println("Waked Up from security timer"); 
+      break;
+    default: 
+      Serial.printf("wake up: %d\n", wakeup_reason); 
+      break;
+  }
+}
+
 // --- SETUP E LOOP ---
 void setup() {
     Serial.begin(115200);
+    esp_sleep_wakeup_cause_t wakeup_reason = esp_sleep_get_wakeup_cause();
     myID = generateDeviceID();
     memset(rxBuffer, 0, sizeof(rxBuffer)); 
     Wire.begin(OLED_SDA, OLED_SCL);
     if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C, false, false)) {
         Serial.println("SSD1306 Fallito");
     }
-    updateUI("BOOT", "Inizializzazione...");
+    
 
     Serial.print("Inizializzazione LoRa...");
     int state = radio.begin(868.0); 
     if (state == RADIOLIB_ERR_NONE) {
-        Serial.println(" OK!");
+        Serial.println("OK");
     } else {
         Serial.print(" Errore: "); Serial.println(state);
         while (true); 
     }
-    
+
+    if (wakeup_reason == ESP_SLEEP_WAKEUP_EXT1) {
+        Serial.println("Risveglio... Processo pacchetto...");
+    }
+
+   //  Inizializzazione standard radio
+   // int state = radio.begin(868.0);
+  // if (state != RADIOLIB_ERR_NONE) {
+       //Serial.println("Errore Radio!");
+        //while (true);
+    }
+
+    // avvio ui e web server
+    server.begin();
     setupUI();
+    
+    updateUI("READY", wakeup_reason == ESP_SLEEP_WAKEUP_EXT1 ? "Msg ricevuto" : "Online");
+}
+    
     updateUI("READY", "In attesa di segnale...");
 }
 
