@@ -13,7 +13,8 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include "pqc_kyber.h"
-
+// --- LAST ACTIVITY FOR SCEEN TIMEOUT ---
+unsigned long lastActivity = 0;
 // --- CONFIGURAZIONE HARDWARE ---
 #define OLED_SDA 17
 #define OLED_SCL 18
@@ -461,6 +462,7 @@ void setupUI() {
     WiFi.softAP(apName, "12345678");
 
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+        lastActivity = millis(); // activity timer reset
         request->send_P(200, "text/html", index_html, [](const String& var){
             if(var == "MYID") {
                 char idStr[10];
@@ -472,6 +474,7 @@ void setupUI() {
     });
 
     server.on("/send", HTTP_GET, [](AsyncWebServerRequest *request){
+        lastActivity = millis(); // activity timer reset
         if (request->hasParam("type") && request->hasParam("target")) {
             String type = request->getParam("type")->value();
             uint32_t targetID = strtoul(request->getParam("target")->value().c_str(), NULL, 16);
@@ -539,6 +542,7 @@ void WakeUpReason() { // explain why the esp32 waked up
 
 // --- SETUP E LOOP ---
 void setup() {
+    
     Serial.begin(115200);
     esp_sleep_wakeup_cause_t wakeup_reason = esp_sleep_get_wakeup_cause();
     myID = generateDeviceID();
@@ -580,6 +584,9 @@ void setup() {
 }
 
 void loop() {
+    if (millis() - lastActivity > 600000) { // 10 minuti
+    SleepMode();
+}
     checkIncomingLora();
     checkRxBufferTimeout();
 
