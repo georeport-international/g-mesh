@@ -1,4 +1,17 @@
-/* * G-Mesh Project - (C) 2026 Emanuele Ferraro & GeoReport International Technologies
+/**
+ * ============================================================================
+ * G-Mesh Project - (C) 2026 Emanuele Ferraro & GeoReport International Technologies
+ * ============================================================================
+ * @version 1.0.0
+ * @author Emanuele Ferraro & GeoReport International Technologies
+ * @copyright 2026 Emanuele Ferraro & GeoReport International Technologies. All rights reserved.
+ * * Security. Privacy. Freedom.
+ * 🌐 Web: https://g-mesh.org | https://georeport.it
+ * 💬 Community & Support: https://forum.g-mesh.org (soon)
+ * 📚 Docs: https://docs.g-mesh.org (soon)
+ * ============================================================================
+ */
+/* * 
  * Versione: ML-KEM (Kyber-512) + AES-256-GCM + Full Utilities
  */
 // Last update: battery optimization
