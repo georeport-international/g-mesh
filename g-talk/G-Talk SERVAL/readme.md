@@ -1,6 +1,6 @@
-## G-TALK UEU (Urban Exploration Unit)
+## G-TALK SERVAL (Urban Exploration Unit)
 
-The **G-TALK UEU** is the tactical version of the G-MESH ecosystem, specifically designed for urban exploration, environmental monitoring in high-risk areas, and operations in "denied-signal" environments (tunnels, basements, abandoned industrial areas).
+The **G-TALK SERVAL** is the tactical version of the G-MESH ecosystem, specifically designed for urban exploration, environmental monitoring in high-risk areas, and operations in "denied-signal" environments (tunnels, basements, abandoned industrial areas).
 
 It is not just a communication device, but a sensor capable of monitoring the surrounding environment and ensuring the user's safe return.
 
@@ -22,4 +22,4 @@ Real-time monitoring of:
 * **Security:** Post-Quantum Encryption with Kyber-512
 
 ---
-https://g-mesh.org/products/ueu
+https://g-mesh.org/products/g-talk-serval
