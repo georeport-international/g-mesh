@@ -1,0 +1,25 @@
+## G-TALK UEU (Urban Exploration Unit)
+
+The **G-TALK UEU** is the tactical version of the G-MESH ecosystem, specifically designed for urban exploration, environmental monitoring in high-risk areas, and operations in "denied-signal" environments (tunnels, basements, abandoned industrial areas).
+
+It is not just a communication device, but a sensor capable of monitoring the surrounding environment and ensuring the user's safe return.
+
+### Main Features:
+
+Real-time monitoring of:
+* **Air quality:** Gas ​​detection (CO, CO2, methane) and oxygen levels
+* **Invisible dangers:** Geiger-Müller module for ionizing radiation detection.
+* **Climate stability:** Temperature and humidity monitoring for confined spaces.
+* **Tactical Panic Module:** Dedicated physical "Hard-Wipe" button for instant deletion of cryptographic keys and automated sending of a low-latency SOS broadcast signal across the entire network.
+* **Apocalypse Ready:** 3D-printed case optimized for resistance to dust, water, and accidental impacts.
+* **Network Intelligence:** Self-healing mesh protocol with "Breadcrumbs" functionality: the device automatically sends encrypted geolocation signals to fixed nodes to map the explorer's route even in the absence of satellite GPS.
+* **Silent Operation:** Silent operation mode to avoid attracting attention in hostile environments.
+
+### Technical Specifications for Development:
+* **Hardware:** ESP32-S3 + LoRa SX1262 Module
+* **Protocol:** G-MESH EasyCat Firmware V1+ (C++/Python).
+* **Expandability:** Accessible I2C bus for plug-and-play sensors.
+* **Security:** Post-Quantum Encryption with Kyber-512
+
+---
+https://g-mesh.org/products/ueu
