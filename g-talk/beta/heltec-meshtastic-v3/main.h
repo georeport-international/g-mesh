@@ -1,7 +1,7 @@
 /* * G-Mesh Project - (C) 2026 Emanuele Ferraro & GeoReport International Technologies
  * Versione: ML-KEM (Kyber-512) + AES-256-GCM + Full Utilities
  */
-// Last update: battery optimization
+// Last update: LoRa & bug optimization
 
 #include <Arduino.h>
 #include <esp_mac.h>      // Per il MAC address
@@ -753,10 +753,10 @@ void loop() {
     
     if (Serial.available()) {
         char c = Serial.read();
-        if (c == 'h')
-            uint8_t securePayload[128];
-                String testMsg = "Hello non-Secure World!";
-                sendPacket(MSG_CHAT, 0xFFFFFFFF, testMsg.length() + 28);
+        if (c == 'h') {
+        String testMsg = "Hello non-Secure World!";
+        sendPacket(MSG_CHAT, 0xFFFFFFFF, (uint8_t*)testMsg.c_str(), testMsg.length());
+    }
         if (c == 'k') startKyberHandshake(0xFFFFFFFF);
         if (c == 's') {
             if (is_secure_ready) {
