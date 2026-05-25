@@ -242,12 +242,10 @@ GPacket preparePacket(GMessageType type, uint32_t target, uint8_t* data, uint16_
 void sendToRadio(GPacket &p) {
     Serial.printf("Invio MSG Tipo: 0x%02X\n", p.msgType);
     
-    // Aspetta che la radio non sia occupata
     while(digitalRead(LORA_BUSY) == HIGH) {
         delay(1);
     }
     
-    // FORZA LA RADIO IN STANDBY
     radio.standby();
     delay(50);
     
@@ -257,16 +255,13 @@ void sendToRadio(GPacket &p) {
         Serial.println("TX OK!");
     } else {
         Serial.printf("Errore TX! Codice: %d\n", state);
-        // Commenta queste righe se non esistono
         // if (state == RADIOLIB_ERR_PACKET_TOO_LONG) Serial.println("  - Pacchetto troppo lungo");
         // if (state == RADIOLIB_ERR_TX_TIMEOUT) Serial.println("  - Timeout TX");
         // if (state == RADIOLIB_ERR_BUSY) Serial.println("  - Radio occupata");
     }
     
-    // Attendi fine trasmissione
     delay(50);
     
-    // RIMETTE IN RICEZIONE
     radio.startReceive();
 }
 
@@ -607,12 +602,11 @@ void setupRadio() {
     digitalWrite(LORA_RST, LOW);
     delay(100);
     digitalWrite(LORA_RST, HIGH);
-    delay(200);  // Aumentato
+    delay(200); 
     
     pinMode(LORA_BUSY, INPUT);
     delay(50);
     
-    // Inizializza con parametri più conservativi
     Serial.print("Inizializzazione LoRa...");
     int state = radio.begin(868.0,      // Frequenza
                             125.0,      // Bandwidth
@@ -623,24 +617,20 @@ void setupRadio() {
                             8);         // Preamble
     
     if (state != RADIOLIB_ERR_NONE) {
-        Serial.printf(" Fallito! Codice: %d\n", state);
+        Serial.printf(" Fallito Codice: %d\n", state);
         return;
     }
     
     Serial.println(" OK!");
     
-    // Configurazioni aggiuntive
     radio.setCRC(true);
     radio.setOutputPower(10);
     
-    // Aspetta che la radio sia pronta
     delay(100);
     
-    // Test TX
     Serial.print("Test TX breve...");
     uint8_t testMsg[] = "G-MESH TEST";
     
-    // Aspetta che BUSY sia basso
     while(digitalRead(LORA_BUSY) == HIGH) delay(1);
     
     state = radio.transmit(testMsg, sizeof(testMsg));
