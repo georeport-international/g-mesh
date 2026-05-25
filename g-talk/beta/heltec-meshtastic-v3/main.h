@@ -24,13 +24,24 @@ unsigned long lastActivity = 0;
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 #define DEFAULT_TTL 3
-#define OLED_PWR 36  // or try with 35 if 36 does not work
+#define OLED_PWR 36  // Pin alimentazione display
 // pin radio
-#define LORA_SCK   9
-#define LORA_MOSI  10
-#define LORA_MISO  11
-SX1262 radio = new Module(8, 14, 12, 13);
+#define LORA_CS     8   // Chip Select
+#define LORA_DIO1   14  // DIO1 (interrupt)
+#define LORA_RST    12  // Reset
+#define LORA_BUSY   13  // Busy pin
 
+// Pin SPI
+#define LORA_SCK    9   // SCK
+#define LORA_MISO   11  // MISO
+#define LORA_MOSI   10  // MOSI
+
+// SPI con pin corretti
+SPIClass spi(FSPI);
+SPISettings spiSettings(100000, MSBFIRST, SPI_MODE0);
+
+// Inizializza la radio con TUTTI i pin necessari
+SX1262 radio = new Module(LORA_CS, LORA_DIO1, LORA_RST, LORA_BUSY, spi, spiSettings);
 // --- PARAMETRI SISTEMA ---
 #define CACHE_SIZE 10
 
@@ -45,7 +56,7 @@ SX1262 radio = new Module(8, 14, 12, 13);
 
 // --- STRUTTURE DATI ---
 enum GMessageType : uint8_t {
-    // --- enum ---
+    // --- SISTEMA E CONNESSIONE ---
     MSG_NET_TEST          = 0x00, 
     MSG_HEARTBEAT         = 0x01, 
     MSG_ACK               = 0x08, 
@@ -100,7 +111,7 @@ struct __attribute__((packed)) GPacket {
     uint16_t payloadLen;
     uint32_t timestamp;
     uint32_t nonce;
-    uint8_t  payload[200]; 
+    uint8_t  payload[128]; 
     uint8_t  signature[32];
     uint8_t  etx = 0x03;
 };
@@ -222,28 +233,41 @@ GPacket preparePacket(GMessageType type, uint32_t target, uint8_t* data, uint16_
     p.totalFrames = 1;
     p.timestamp = millis() / 1000;
     p.nonce = currentNonce++;
-    p.payloadLen = (len > 200) ? 200 : len;
-    memset(p.payload, 0, 200); 
+    p.payloadLen = (len > 128) ? 128 : len;
+    memset(p.payload, 0, 128); 
     if (data != nullptr) memcpy(p.payload, data, p.payloadLen);
     return p;
 }
 
 void sendToRadio(GPacket &p) {
-	Serial.printf("Invio MSG Tipo: 0x%02X\n", p.msgType);
-	
-	// FORZA LA RADIO IN STANDBY (interrompe la ricezione)
-	radio.standby();
-	delay(10);
-	
-	int state = radio.transmit((uint8_t*)&p, sizeof(GPacket));
-	if (state == RADIOLIB_ERR_NONE) {
-		Serial.println("TX OK!");
-	} else {
-		Serial.printf("Errore TX! Codice: %d\n", state);
-	}
-	
-	// RIMETTE IN RICEZIONE dopo la trasmissione
-	radio.startReceive();
+    Serial.printf("Invio MSG Tipo: 0x%02X\n", p.msgType);
+    
+    // Aspetta che la radio non sia occupata
+    while(digitalRead(LORA_BUSY) == HIGH) {
+        delay(1);
+    }
+    
+    // FORZA LA RADIO IN STANDBY
+    radio.standby();
+    delay(50);
+    
+    int state = radio.transmit((uint8_t*)&p, sizeof(GPacket));
+    
+    if (state == RADIOLIB_ERR_NONE) {
+        Serial.println("TX OK!");
+    } else {
+        Serial.printf("Errore TX! Codice: %d\n", state);
+        // Commenta queste righe se non esistono
+        // if (state == RADIOLIB_ERR_PACKET_TOO_LONG) Serial.println("  - Pacchetto troppo lungo");
+        // if (state == RADIOLIB_ERR_TX_TIMEOUT) Serial.println("  - Timeout TX");
+        // if (state == RADIOLIB_ERR_BUSY) Serial.println("  - Radio occupata");
+    }
+    
+    // Attendi fine trasmissione
+    delay(50);
+    
+    // RIMETTE IN RICEZIONE
+    radio.startReceive();
 }
 
 void sendPacket(GMessageType type, uint32_t target, uint8_t* data, uint16_t len) {
@@ -408,7 +432,7 @@ void checkRxBufferTimeout() {
     }
 }
 void checkIncomingLora() {
-    int state = radio.receive((uint8_t*)&tempPacket, sizeof(GPacket), 50);
+    int state = radio.receive((uint8_t*)&tempPacket, sizeof(GPacket), 150);
     
     if (state == RADIOLIB_ERR_NONE) {
         if (tempPacket.stx != 0x02 || tempPacket.etx != 0x03) return;
@@ -504,8 +528,8 @@ void setupUI() {
         html += "<input type='text' id='targetID' placeholder='Target ID (es. 0xFFFFFFFF)'>";
         html += "<input type='text' id='chatMsg' placeholder='Scrivi messaggio...'><br>";
         html += "<button class='btn msg' onclick='sendData(\"CHAT\")'>INVIA CHAT</button>";
-        html += "<button class='btn sos' onclick='sendData(\"SOS\")'>SOS</button>";
-        html += "<button class='btn key' onclick='sendData(\"KEY\")'>HANDSHAKE</button>";
+        html += "<button class='btn sos' onclick='sendData(\"SOS\")'>RICHIESTA MEDICO</button>";
+        html += "<button class='btn key' onclick='sendData(\"KEY\")'>HANDSHAKE KYBER</button>";
         html += "<script>";
         html += "function sendData(type) {";
         html += "var tid = document.getElementById('targetID').value;";
@@ -570,14 +594,74 @@ void WakeUpReason() {
   }
 }
 
+void setupRadio() {
+    Serial.println("=== DIAGNOSTICA RADIO ===");
+    
+    // Inizializza SPI
+    spi.begin(LORA_SCK, LORA_MISO, LORA_MOSI, LORA_CS);
+    pinMode(LORA_CS, OUTPUT);
+    digitalWrite(LORA_CS, HIGH);
+    
+    // Hard reset
+    pinMode(LORA_RST, OUTPUT);
+    digitalWrite(LORA_RST, LOW);
+    delay(100);
+    digitalWrite(LORA_RST, HIGH);
+    delay(200);  // Aumentato
+    
+    pinMode(LORA_BUSY, INPUT);
+    delay(50);
+    
+    // Inizializza con parametri più conservativi
+    Serial.print("Inizializzazione LoRa...");
+    int state = radio.begin(868.0,      // Frequenza
+                            125.0,      // Bandwidth
+                            9,          // SF
+                            7,          // CR
+                            0x12,       // Sync Word
+                            10,         // Potenza
+                            8);         // Preamble
+    
+    if (state != RADIOLIB_ERR_NONE) {
+        Serial.printf(" Fallito! Codice: %d\n", state);
+        return;
+    }
+    
+    Serial.println(" OK!");
+    
+    // Configurazioni aggiuntive
+    radio.setCRC(true);
+    radio.setOutputPower(10);
+    
+    // Aspetta che la radio sia pronta
+    delay(100);
+    
+    // Test TX
+    Serial.print("Test TX breve...");
+    uint8_t testMsg[] = "G-MESH TEST";
+    
+    // Aspetta che BUSY sia basso
+    while(digitalRead(LORA_BUSY) == HIGH) delay(1);
+    
+    state = radio.transmit(testMsg, sizeof(testMsg));
+    if (state == RADIOLIB_ERR_NONE) {
+        Serial.println(" OK!");
+    } else {
+        Serial.printf(" ERRORE: %d\n", state);
+    }
+    
+    delay(100);
+    radio.startReceive();
+    Serial.println("Radio pronta in ricezione");
+}
+
 // --- SETUP E LOOP ---
 void setup() {
     Serial.begin(115200);
-    delay(1000);
+    Serial.printf("Dimensione GPacket: %d byte\n", sizeof(GPacket));
+    delay(400);
     
     Serial.println("=== AVVIO ===");
-    SPI.begin(9, 11, 10, 8);  // SCK, MISO, MOSI, CS
-    Serial.println("SPI avviato correttamente...");
     delay(200);
     
     Serial.println("Accensione display...");
@@ -613,7 +697,7 @@ void setup() {
     Serial.printf("Totale dispositivi I2C trovati: %d\n", deviceCount);
     
     if (deviceCount == 0) {
-        Serial.println("NESSUN DISPOSITIVO I2C TROVATO");
+        Serial.println("NESSUN DISPOSITIVO I2C TROVATO!");
     }
     
     Serial.println("Inizializzazione display...");
@@ -631,63 +715,7 @@ void setup() {
     oled.display();
     delay(100);
     oled.display();
-    
-    // ===== RADIO LORA =====
-    Serial.print("Inizializzazione LoRa...");
-    Serial.println("=== DIAGNOSTICA RADIO ===");
-
-    pinMode(23, OUTPUT);
-    digitalWrite(23, HIGH);
-    Serial.println("Pin 23: HIGH (alimentazione radio)");
-
-    pinMode(12, OUTPUT);
-    digitalWrite(12, LOW);
-    delay(100);
-    digitalWrite(12, HIGH);
-    delay(100);
-    Serial.println("Pin 12: reset completato");
-
-    SPI.begin(9, 11, 10, 8);  // SCK, MISO, MOSI, CS
-    Serial.printf("SPI iniziato con SCK=%d, MISO=%d, MOSI=%d\n", LORA_SCK, LORA_MISO, LORA_MOSI);
-
-    delay(100);
-    byte version = 0;
-    SPI.beginTransaction(SPISettings(2000000, MSBFIRST, SPI_MODE0));
-    digitalWrite(8, LOW);
-    version = SPI.transfer(0x42);
-    digitalWrite(8, HIGH);
-    SPI.endTransaction();
-    Serial.printf("Lettura registro versione: 0x%02X (dovrebbe essere 0x12 o 0x22)\n", version);
-
-    Serial.print("Inizializzazione LoRa...");
-    int state = radio.begin(868.0);
-    Serial.printf(" Risultato: %d\n", state);
-    pinMode(23, OUTPUT);
-    digitalWrite(23, HIGH);
-    delay(100);
-
-    pinMode(12, OUTPUT);
-    digitalWrite(12, LOW);
-    delay(100);
-    digitalWrite(12, HIGH);
-    delay(100);
-    if (state == RADIOLIB_ERR_NONE) {
-        Serial.println(" OK");
-    } else {
-        Serial.printf(" Fallito! Codice: %d\n", state);
-        while(true);
-    }
-
-    radio.setOutputPower(10);
-
-    Serial.print("Test TX breve...");
-    uint8_t testMsg[] = "G-MESH TEST";
-    int txState = radio.transmit(testMsg, sizeof(testMsg));
-    if (txState == RADIOLIB_ERR_NONE) {
-        Serial.println(" OK!");
-    } else {
-        Serial.printf(" ERRORE: %d\n", txState);
-    }
+    setupRadio();
     /*Serial.print("Inizializzazione LoRa...");
     Heltec.begin(false, true, true, false);
     Heltec.LoRa.setSpreadingFactor(12);
@@ -735,6 +763,10 @@ void loop() {
     
     if (Serial.available()) {
         char c = Serial.read();
+        if (c == 'h')
+            uint8_t securePayload[128];
+                String testMsg = "Hello non-Secure World!";
+                sendPacket(MSG_CHAT, 0xFFFFFFFF, testMsg.length() + 28);
         if (c == 'k') startKyberHandshake(0xFFFFFFFF);
         if (c == 's') {
             if (is_secure_ready) {
