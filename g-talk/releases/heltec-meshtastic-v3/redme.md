@@ -5,7 +5,7 @@
 
 [![Platform: ESP32](https://img.shields.io/badge/Platform-ESP32-blue)](https://www.espressif.com/)
 [![LoRa: SX1262](https://img.shields.io/badge/LoRa-SX1262-green)](https://www.semtech.com/products/wireless-rf/lora-connect/sx1262)
-[![Crypto: Kyber-512](https://img.shields.io/badge/Crypto-Kyber--512-red)](https://pq-crystals.org/kyber/)
+[![Crypto: Kyber-512](https://img.shields.io/badge/Encryption-Kyber--512-red)](https://pq-crystals.org/kyber/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ## Overview
