@@ -47,4 +47,18 @@ Support for creating and developing advanced Discord bots, advice for creating a
 Discord: https://discord.gg/jzE3PKyQHr
 
 ---
+
+# BerylStudios - Official Sponsor
+
+BerylStudios is a small studio/lab focused on Minecraft tools, server systems, Discord automation and practical resources for server owners, developers and communities.
+
+Discord: https://discord.gg/dBUVT8CGdW
+
+---
+
+#Flumo24 Studios - Official Sponsor
+
+Flumo24 Studios is an Italian team that develops custom digital solutions: Discord bots, desktop software, websites, Android apps, Minecraft plugins and setups, texture packs, and video editing.
+
+---
 If you're interested, reach out to us at info@georeport.it
