@@ -266,7 +266,7 @@ void sendToRadio(GPacket &p) {
 }
 
 void sendPacket(GMessageType type, uint32_t target, uint8_t* data, uint16_t len) {
-    uint8_t totalFrames = (len == 0) ? 1 : (len / 200) + ((len % 200) != 0 ? 1 : 0);
+    uint8_t totalFrames = (len == 0) ? 1 : (len / 128) + ((len % 128) != 0 ? 1 : 0);
     currentSessionID++;
 
     for (uint8_t i = 0; i < totalFrames; i++) {
@@ -281,8 +281,8 @@ void sendPacket(GMessageType type, uint32_t target, uint8_t* data, uint16_t len)
         p.timestamp = millis() / 1000;
         p.nonce = currentNonce++;
         
-        uint16_t offset = i * 200;
-        p.payloadLen = (len - offset > 200) ? 200 : (len - offset);
+        uint16_t offset = i * 128;
+        p.payloadLen = (len - offset > 128) ? 128 : (len - offset);
         memset(p.payload, 0, 200);
         if (data) memcpy(p.payload, data + offset, p.payloadLen);
 
@@ -394,7 +394,7 @@ void handlePacketReassembly(GPacket &p) {
     }
 
     if (slot != -1) {
-        uint16_t offset = p.frameIdx * 200;
+        uint16_t offset = p.frameIdx * 128;
         if (offset + p.payloadLen <= 1000) { 
             memcpy(&rxBuffer[slot].fullData[offset], p.payload, p.payloadLen);
             rxBuffer[slot].receivedFrames++;
