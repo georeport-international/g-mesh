@@ -3,7 +3,7 @@ G-Mesh was born from several contemporary problems: in recent months, the GeoRep
 G-Mesh doesn't stop there; anyone can build their own systems, focusing on transparency, trust, and privacy. G-Mesh can be used in emergencies, when 5G towers are destroyed or fiber optic cables are severed. G-Mesh is essential for hikers, when they need to communicate in areas without internet, in critical zones, or in situations such as floods, uninhabited areas, wars, and limited freedom of the press.
 
 ---
-![GeoReport Banner](https://cdn.discordapp.com/attachments/1496191044335829007/1498821069572669460/g-mesh-banner.png?ex=69f28d65&is=69f13be5&hm=538a046b8d1295a68f93f3fe50de224743fb36cdb429f26ef40df8ab4e931b5d) 
+<img width="500" height="500" alt="g-mesh alta qualità" src="https://github.com/user-attachments/assets/e487cd6c-e9a6-4f24-90bc-b6c8e27bebcf" />
 
 ![License](https://img.shields.io/github/license/georeport-international/g-mesh) ![Top Language](https://img.shields.io/github/languages/top/georeport-international/g-mesh) ![Repo Size](https://img.shields.io/github/repo-size/georeport-international/g-mesh)
 ![PQC Crypto](https://img.shields.io/badge/Security-PQC_Encrypted-blueviolet) ![Contributors](https://img.shields.io/github/contributors/georeport-international/g-mesh) ![Top Languages](https://img.shields.io/github/languages/top/georeport-international/g-mesh)
@@ -11,11 +11,18 @@ G-Mesh doesn't stop there; anyone can build their own systems, focusing on trans
 ## 🛠 Project Ecosystem
 Explore the components of the G-Mesh network:
 
-* [**G-Talk**](./g-talk): Handheld devices, logic systems, and build guides.
-* [**G-Node**](./g-node): Network nodes, source code, and infrastructure.
-* [**G-Orbit**](./g-orbit): Our satellite segment — logic, builds, and orbital data.
-* [**PQC**](./pqc): Integration of Post-Quantum encryption on ESP32.
-* [**Partners**](./partners.md): Contributors, supporters, and funders.
+* [**G-Talk**](./g-talk): our communication devices.
+* [**G-Node**](./g-node): our communication ground base nodes.
+* [**G-Orbit**](./g-orbit): our satellite.
+* [**PQC**](./pqc): how the pqc encryption (Kyber-512) work.
+* [**Partners**](./partners.md): our sponsors and contributors.
+
+**This repo works as a multi-repo**, here you can discover the hardware, the communication devices, the ground base nodes, the satellite how the encryption work in separated folder that works like a repo.
+You can discover that folders as repo here:
+* [**G-Talk**](https://github.com/georeport-international/g-talk): our communication devices.
+* [**G-Node**](https://github.com/georeport-international/g-node): our communication ground base nodes.
+* [**G-Orbit**](https://github.com/georeport-international/g-orbit): our satellite.
+* [**PQC**](https://github.com/georeport-international/g-mesh-pqc): how the pqc encryption (Kyber-512) work.
 
 ## 📡 Use Cases
 * **Conflict Zones:** Communication when infrastructure is destroyed or censored.
@@ -27,11 +34,9 @@ Explore the components of the G-Mesh network:
 
 ## 🔗 Connect with Us
 * **Official Website:** [g-mesh.org](https://g-mesh.org/)
-* **News & Reports:** [international.georeport.it](https://international.georeport.it/)
-* **Technical Lab:** [lab.georeport.it](https://lab.georeport.it/)
-* **Dev Blog:** [blog.g-mesh.org](https://blog.g-mesh.org/)
-* **YouTube:** [@georeport-international-tech](https://youtube.com/@georeport-international-tech)
-* **Email:** Redazione@georeport.it
+* **GeoReport International Technologies:** [www.georeport.it](https://www.georeport.it/)
+* **YouTube:** [@georeport-it](https://youtube.com/@georeport-it)
+* **Email:** [info@georeport.it](mailto:info@georeport.it)
 
 ---
 *Developed by GeoReport International Technologies*
