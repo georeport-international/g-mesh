@@ -303,7 +303,7 @@ When contributing, please maintain the same code style and add detailed comments
 
 ## License
 
-This project is licensed under the **MIT License** – see the [LICENSE](LICENSE) file for details.  
+This project is licensed under the **General Public License V3** – see the [LICENSE](./LICENSE) file for details.  
 *Copyright (c) 2026 Emanuele Ferraro & GeoReport International Technologies*
 
 ---
