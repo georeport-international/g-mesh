@@ -60,5 +60,7 @@ Discord: https://discord.gg/dBUVT8CGdW
 
 Flumo24 Studios is an Italian team that develops custom digital solutions: Discord bots, desktop software, websites, Android apps, Minecraft plugins and setups, texture packs, and video editing.
 
+Website: https://flumo24studios.com
+
 ---
 If you're interested, reach out to us at info@georeport.it
