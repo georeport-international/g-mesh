@@ -19,7 +19,7 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
-#include "pqc_kyber.h"
+#include <pqc_kyber.h>
 // --- LAST ACTIVITY FOR SCEEN TIMEOUT ---
 unsigned long lastActivity = 0;
 // --- CONFIGURAZIONE HARDWARE ---
