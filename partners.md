@@ -24,14 +24,6 @@ Discord: https://discord.gg/aFVvzUUEMJ
 
 ---
 
-## Kaleido Ita - Official Sponsor
-
-The ultimate meeting place for creators and users. Sponsorships: Dedicated channels to promote your server, organized by category.
-
-Discord: https://discord.gg/5fs7fd2KyD
-
----
-
 # Blackowlzz.eu - Official Sponsor
 
 Get free plugins and advertise your Minecraft server for FREE! Advanced features – search, filters, voter, stats, today's voters
